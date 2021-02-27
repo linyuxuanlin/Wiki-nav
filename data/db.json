@@ -13,13 +13,18 @@
                 "createdAt": "2021-02-18T13:06:06.671Z",
                 "desc": "GitHub的官方命令行工具",
                 "icon": "https://github.githubassets.com/favicons/favicon.svg",
-                "url": "https://cli.github.com/"
+                "url": "https://cli.github.com/",
+                "urls": {},
+                "rate": 5,
+                "top": false
               }
             ],
-            "collapsed": false
+            "collapsed": false,
+            "createdAt": "2021-02-27T05:25:34.603Z"
           }
         ],
-        "collapsed": false
+        "collapsed": false,
+        "createdAt": "2021-02-27T05:25:34.603Z"
       },
       {
         "title": "设计相关",
@@ -31,28 +36,20 @@
                 "icon": "https://www.draw.io/images/apple-touch-icon.png",
                 "name": "draw",
                 "desc": "免费的在线图表软件，用于制作流程图、流程图、组织图、UML、ER和网络图",
-                "url": "https://www.draw.io/"
+                "url": "https://www.draw.io/",
+                "createdAt": "2021-02-27T05:25:34.603Z",
+                "urls": {},
+                "rate": 5,
+                "top": false
               }
-            ]
+            ],
+            "createdAt": "2021-02-27T05:25:34.603Z"
           }
-        ]
-      },
-      {
-        "title": "测试",
-        "nav": [
-          {
-            "title": "a",
-            "nav": [
-              {
-                "icon": "https://www.draw.io/images/apple-touch-icon.png",
-                "name": "2",
-                "desc": "免费的在线图表软件，用于制作流程图、流程图、组织图、UML、ER和网络图",
-                "url": "https://www.draw.io/"
-              }
-            ]
-          }
-        ]
+        ],
+        "createdAt": "2021-02-27T05:25:34.603Z"
       }
-    ]
+    ],
+    "createdAt": "2021-02-27T05:25:34.603Z",
+    "id": 2
   }
 ]
