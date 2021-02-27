@@ -1,0 +1,65 @@
+<div class="fixbar">
+  <span *ngIf="isLogin" nz-tooltip nzTooltipTitle="查看信息">
+    <div
+      class="wrapper dark-bg dark-border-color dark-action-hover"
+      (click)="viewInfo()"
+    >
+    <img src="assets/img/view.svg" />
+    </div>
+  </span>
+
+  <div
+    class="wrapper dark-bg dark-border-color dark-action-hover"
+    nz-dropdown
+    [nzDropdownMenu]="menu"
+    nzPlacement="topLeft"
+  >
+    <img src="assets/img/theme.svg" />
+  </div>
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <ul nz-menu nzSelectable>
+      <li
+        nz-menu-item
+        *ngFor="let themeItem of themeList"
+        (click)="toggleTheme(themeItem)"
+      >
+        {{ themeItem.name }}
+      </li>
+    </ul>
+  </nz-dropdown-menu>
+
+  <span *ngIf="isLogin" nz-tooltip nzTooltipTitle="同步数据">
+    <div
+      class="wrapper dark-bg dark-border-color dark-action-hover"
+      (click)="handleSync()"
+      [class.rotate]="syncLoading"
+    >
+      <i class="iconfont iconwinfo-icon-tongbu"></i>
+    </div>
+  </span>
+
+  <span nz-tooltip nzTooltipTitle="新增数据">
+    <div class="wrapper dark-bg dark-border-color dark-action-hover" (click)="toggleModal()">
+      <i class="iconfont iconchuangjian"></i>
+    </div>
+  </span>
+  
+  <span nz-tooltip [nzTooltipTitle]="collapsed ? '展开' : '折叠'">
+    <div class="wrapper dark-bg dark-border-color dark-action-hover" (click)="collapse()">
+      <i class="iconfont iconweibiaoti25 collapse" [class.active]="collapsed"></i>
+    </div>
+  </span>
+
+  <span nz-tooltip [nzTooltipTitle]="isDark ? '关闭暗黑' : '开启暗黑'">
+    <div class="wrapper dark-bg dark-border-color dark-action-hover" (click)="toggleMode()">
+      <i class="iconfont icondark dark" *ngIf="!isDark"></i>
+      <img class="iconfont icondark" src="assets/img/light.svg" *ngIf="isDark">
+    </div>
+  </span>
+  
+  <div class="wrapper dark-bg dark-border-color dark-action-hover" (click)="goTop()">
+    <i class="iconfont iconjiantouarrow483 arrow"></i>
+  </div>
+</div>
+
+<app-login [visible]="showCreateModal" (onCancel)="toggleModal()"></app-login>

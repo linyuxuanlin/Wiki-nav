@@ -1,0 +1,82 @@
+<nz-layout class="layout">
+  <nz-layout>
+    <div class="logo dark-bg">
+      <img [src]="LOGO_CDN" alt="发现导航nav3.cn">
+      <span class="site-title">{{ title }}</span>
+    </div>
+    <nz-sider nzWidth="200px" nzTheme="light" class="sider dark-scrollbar">
+      <ul nz-menu nzMode="inline" class="sider-menu">
+        <li
+          nz-submenu
+          [(nzOpen)]="pageIdx === openIndex"
+          [nzTitle]="item.title"
+          *ngFor="let item of websiteList; index as pageIdx;"
+          (nzOpenChange)="openIndex = pageIdx"
+        >
+          <ul>
+            <li
+              nz-menu-item *ngFor="let el of item.nav; let idIdx = index;"
+              [nzSelected]="page === pageIdx && id === idIdx"
+              (click)="handleSidebarNav(pageIdx, idIdx)" 
+            >
+              {{ el.title }}
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nz-sider>
+    <nz-layout class="inner-layout">
+      <nz-content class="content" id="content">
+        <div class="search-header dark-bg-deep dark-border-color">
+          <app-search-engine></app-search-engine>
+          <app-web-list></app-web-list>
+        </div>
+
+        <div class="box" [style.marginTop]="marginTop + 'px'">
+          <div *ngIf="currentList.length > 0; else noData">
+            <div *ngFor="let item of currentList; let i=index">
+              <div class="nav-wrapper">
+                <app-toolbar-title
+                  [dataSource]="item"
+                  (onCollapse)="onCollapse(item, i)"
+                  [index]="i"
+                  arrowType="2"
+                >
+                </app-toolbar-title>
+      
+                <div nz-row [nzGutter]="[16, 16]" [style.display]="item.collapsed ? 'none' : ''">
+                  <div
+                    *ngFor="let el of item.nav"
+                    class="gutter-row"
+                    nz-col
+                    [nzSpan]="6"
+                    [nzXs]="24"
+                    [nzSm]="12"
+                    [nzMd]="12"
+                    [nzLg]="8"
+                    [nzXl]="6"
+                    [nzXXl]="6"
+                  >
+                    <app-card [dataSource]="el"></app-card>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #noData>
+            <app-no-data></app-no-data>
+          </ng-template>
+        </div>
+
+        <app-footer className="side-footer"></app-footer>
+      </nz-content>
+    </nz-layout>
+  </nz-layout>
+</nz-layout>
+
+<app-fixbar
+  (onCollapse)="onCollapseAll()"
+  [collapsed]="collapsed()"
+>
+</app-fixbar>
