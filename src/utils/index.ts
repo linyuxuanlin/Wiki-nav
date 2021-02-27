@@ -182,7 +182,6 @@ export function adapterWebsiteList(websiteList: any[], parentItem?: any) {
       }
 
       item.urls ||= {}
-      item.rate ??= 5
       item.top ??= false
     }
   }
