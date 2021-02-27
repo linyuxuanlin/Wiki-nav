@@ -17,7 +17,7 @@ const c: IConfig = {
   homeUrl: 'https://nav3.cn',
 
   // 网站标题
-  title: 'Power\'s NAV',
+  title: 'Power\'s Nav',
 
   // 网站描述
   description: '个人导航站',
