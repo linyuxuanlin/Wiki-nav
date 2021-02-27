@@ -41,10 +41,15 @@
         "title": "测试",
         "nav": [
           {
-            "icon": "https://www.draw.io/images/apple-touch-icon.png",
-            "name": "2",
-            "desc": "免费的在线图表软件，用于制作流程图、流程图、组织图、UML、ER和网络图",
-            "url": "https://www.draw.io/"
+            "title": "a",
+            "nav": [
+              {
+                "icon": "https://www.draw.io/images/apple-touch-icon.png",
+                "name": "2",
+                "desc": "免费的在线图表软件，用于制作流程图、流程图、组织图、UML、ER和网络图",
+                "url": "https://www.draw.io/"
+              }
+            ]
           }
         ]
       }
