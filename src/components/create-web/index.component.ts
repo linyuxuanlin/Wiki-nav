@@ -1,7 +1,7 @@
 // Copyright @ 2018-2021 xiejiahe. All rights reserved. MIT license.
 // See https://github.com/xjh22222228/nav
 
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core'
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 import { getLogoUrl, getTextContent } from '../../utils'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { ITagProp, INavFourProp } from '../../types'
@@ -17,7 +17,6 @@ const tagKeys = Object.keys(tagMap)
   selector: 'app-create-web',
   templateUrl: './index.component.html',
   styleUrls: ['./index.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateWebComponent implements OnInit {
   @Input() detail: object
@@ -43,6 +42,7 @@ export class CreateWebComponent implements OnInit {
       title: ['', [Validators.required]],
       url: ['', [Validators.required]],
       top: [false],
+      ownVisible: [false],
       rate: [5],
       url0: [''],
       url1: [''],
@@ -56,6 +56,7 @@ export class CreateWebComponent implements OnInit {
   }
 
   ngOnChanges() {
+    // 回显表单
     setTimeout(() => {
       if (!this.visible) {
         this.validateForm.reset()
@@ -68,6 +69,7 @@ export class CreateWebComponent implements OnInit {
         this.validateForm.get('icon')!.setValue(detail.icon || '')
         this.validateForm.get('url')!.setValue(detail.url || '')
         this.validateForm.get('top')!.setValue(detail.top ?? false)
+        this.validateForm.get('ownVisible')!.setValue(detail.ownVisible ?? false)
         this.validateForm.get('rate')!.setValue(detail.rate ?? 5)
   
         if (typeof detail.urls === 'object') {
@@ -85,11 +87,18 @@ export class CreateWebComponent implements OnInit {
 
   async onUrlBlur(e) {
     const res = await getLogoUrl(e.target?.value)
-    this.iconUrl = (res || '') as string
-    this.validateForm.get('icon')!.setValue(res || '')
+    if (res) {
+      this.iconUrl = res as string
+      this.validateForm.get('icon')!.setValue(this.iconUrl)
+    }
+  }
+
+  onIconFocus() {
+    document.addEventListener('paste', this.handlePasteImage)
   }
 
   onIconBlur(e) {
+    document.removeEventListener('paste', this.handlePasteImage)
     this.iconUrl = e.target.value
   }
 
@@ -101,24 +110,33 @@ export class CreateWebComponent implements OnInit {
     this.urlArr.pop()
   }
 
-  handleUploadIcon(e) {
-    const that = this
-    const { files } = e.target
-    if (files.length <= 0) return;
-    const file = files[0]
-    const suffix = file.type.split('/').pop()
+  handlePasteImage = event => {
+    const items = event.clipboardData.items
+    let file = null
 
-    if (!file.type.startsWith('image')) {
-      return this.message.error('请不要上传非法图片')
+    if (items.length) {
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.startsWith('image')) {
+          file = items[i].getAsFile()
+          break;
+        }
+      }
     }
 
+    if (file) {
+      this.handleUploadImage(file)
+    }
+  }
+
+  handleUploadImage(file: File) {
+    const that = this
     const fileReader = new FileReader()
     fileReader.readAsDataURL(file)
     fileReader.onload = function() {
       that.uploading = true
       that.iconUrl = this.result as string
-      const url = (this.result as string).split(',')[1]
-      const path = `nav-${Date.now()}.${suffix}`
+      const url = that.iconUrl.split(',')[1]
+      const path = `nav-${Date.now()}-${file.name}`
 
       createFile({
         branch: 'image',
@@ -140,6 +158,17 @@ export class CreateWebComponent implements OnInit {
     }
   }
 
+  onChangeFile(e) {
+    const { files } = e.target
+    if (files.length <= 0) return;
+    const file = files[0]
+
+    if (!file.type.startsWith('image')) {
+      return this.message.error('请不要上传非法图片')
+    }
+    this.handleUploadImage(file)
+  }
+
   handleCancel() {
     this.onCancel.emit()
   }
@@ -157,6 +186,7 @@ export class CreateWebComponent implements OnInit {
       icon,
       url,
       top,
+      ownVisible,
       rate,
       desc,
       url0,
@@ -187,6 +217,7 @@ export class CreateWebComponent implements OnInit {
       rate: rate ?? 0,
       desc: desc || '',
       top: top ?? false,
+      ownVisible: ownVisible ?? false,
       icon,
       url,
       urls

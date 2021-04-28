@@ -5,7 +5,7 @@
   </a>
   <br />
   <b>发现导航</b>
-  <p align="center">一个纯静态、支持 SEO、在线编辑的强大导航网站，希望您会喜欢</p>
+  <p align="center">一个纯静态、支持SEO、在线编辑的强大导航网站，希望您会喜欢</p>
   <p align="center">内置收录多达 800+ 优质网站， 助您工作、学习和生活</p>
   <p align="center">
     <img src="https://img.shields.io/github/v/release/xjh22222228/nav" />
@@ -38,20 +38,6 @@
 
 
 
-## 在线体验
-提供了一个测试在线体验，与最新版本保持同步，请文明体验：
-
-Token: `a4f80afe5c320ada53459b7e64635f6936cede98`
-
-访问以下任意一个网址：
-- [https://nav-git-main.vacuum2021.vercel.app/](https://nav-git-main.vacuum2021.vercel.app/)
-- [https://nav.vacuum2021.vercel.app/](https://nav.vacuum2021.vercel.app/)
-- [https://nav-beta.vercel.app/](https://nav-beta.vercel.app/)
-- [https://vacuum2021.github.io/nav/](https://vacuum2021.github.io/nav/)
-
-
-
-
 
 
 
@@ -79,8 +65,9 @@ Token: `a4f80afe5c320ada53459b7e64635f6936cede98`
 
 
 ## 部署
-推荐使用 `github pages` 服务, 这样就不需要提供服务器, 并且项目里自带了自动化部署服务，像数 `321` 一样简单。
+像数 `321` 一样简单。
 
+#### 方式一(gh-pages免费)
 1、Fork 当前项目。
 
 2、[https://github.com/settings/tokens](https://github.com/settings/tokens) 申请 token, 勾选相应的权限, 如果不懂就全部选中，复制并保存Token。
@@ -92,6 +79,13 @@ Token: `a4f80afe5c320ada53459b7e64635f6936cede98`
 5、务必修改项目配置文件 [nav.config.ts](nav.config.ts)
 
 6、5分钟后打开 https://用户名.github.io/nav 就能看到一个非常强大的导航网站了。
+
+### 推荐方式二(Vercel免费)
+和方式一的步骤一样，除了第4步不用。
+
+具体使用跟着步骤走即可 [https://github.com/apps/vercel](https://github.com/apps/vercel)
+
+
 
 
 注：如果想部署到自己的域名，那么以上教程同样适合，因为它提供了自动化部署， 之后可以通过 `CNAME` 或 `反向代理` 实现：
@@ -111,7 +105,7 @@ server {
 
 
 ## 书签导入
-支持从 Chrome 书签导入（WebKit内核应该都是支持的~），会自动检测满足三级分类的导航，其他一律跳过：
+支持从 Chrome 书签导入（WebKit内核应该都是支持的~），会自动检测满足三级分类的导航，其他一律设为未分类：
 
 ![](https://raw.githubusercontent.com/xjh22222228/public/gh-pages/nav/import.png)
 
@@ -129,7 +123,7 @@ server {
 
 
 ## 更新日志
-[CHANGELOG](CHANGELOG.md)
+[CHANGELOG](https://github.com/xjh22222228/nav/releases)
 
 
 
@@ -151,14 +145,16 @@ mac下是 `Command`，windows 下是 `Ctrl`
 # 下载
 git clone --depth=1 https://github.com/xjh22222228/nav.git
 
+cd nav
+
 # 安装依赖
-npm i
+yarn
 
 # 启动
-npm start
+yarn start
 
 # 打包
-npm run build
+yarn build
 ```
 
 
@@ -196,11 +192,11 @@ Thank you for your [contribution](https://github.com/xjh22222228/nav/issues), me
 
 您可以请作者喝杯咖啡，继续战斗下去（请备注Github名字）~
 
-<img src="https://raw.sevencdn.com/xjh22222228/public/gh-pages/img/32.png" width="600">
+<img src="https://cdn.jsdelivr.net/gh/xjh22222228/public@gh-pages/img/32.png" width="600">
 
 感谢您的认可：
 | 姓名    | 支持金额              |
 | --------------------------------------- |----------- |
-| [aiyou9](https://github.com/aiyou9)     | ￥20.00     |
+| [aiyou9](https://github.com/aiyou9)     | ￥50.00     |
 | 路人甲     | ￥50.00     |
 

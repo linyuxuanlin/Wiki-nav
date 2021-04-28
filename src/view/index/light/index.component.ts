@@ -10,16 +10,18 @@ import {
   queryString,
   setWebsiteList,
   toggleCollapseAll,
+  matchCurrentList
 } from '../../../utils'
+import { isLogin } from '../../../utils/user'
 import { initRipple, setAnnotate } from '../../../utils/ripple'
 import { websiteList } from '../../../store'
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-light',
   templateUrl: './index.component.html',
   styleUrls: ['./index.component.scss']
 })
-export default class HomeComponent {
+export default class LightComponent {
 
   constructor (private router: Router, private activatedRoute: ActivatedRoute) {}
 
@@ -27,21 +29,10 @@ export default class HomeComponent {
   currentList: INavThreeProp[] = []
   id: number = 0
   page: number = 0
+  isLogin = isLogin
 
   ngOnInit() {
     randomBgImg()
-
-    const initList = () => {
-      try {
-        if (this.websiteList[this.page] && this.websiteList[this.page]?.nav?.length > 0) {
-          this.currentList = this.websiteList[this.page].nav[this.id].nav
-        } else {
-          this.currentList = []
-        }
-      } catch (error) {
-        this.currentList = []
-      }
-    }
 
     this.activatedRoute.queryParams.subscribe(() => {
       const tempPage = this.page
@@ -52,7 +43,7 @@ export default class HomeComponent {
       if (q) {
         this.currentList = fuzzySearch(this.websiteList, q)
       } else {
-        initList()
+        this.currentList = matchCurrentList()
       }
 
       if (tempPage !== page) {

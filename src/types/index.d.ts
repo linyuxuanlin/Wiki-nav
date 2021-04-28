@@ -6,6 +6,7 @@ export type ThemeType =
   | 'Sim'
   | 'Side'
   | 'App'
+  | 'Shortcut'
 
 export interface ITagProp {
   [tagName: string]: {
@@ -16,13 +17,15 @@ export interface ITagProp {
 }
 
 export interface INavFourProp {
-  icon?: string | null
-  createdAt?: string
-  rate?: number
-  top?: boolean
   name: string
   desc: string
   url: string
+  icon?: string | null
+  createdAt?: string
+  rate?: number // 0-5
+  top?: boolean
+  index?: number // sort
+  ownVisible?: boolean
   urls?: {
     [tagName: string]: string
   }
@@ -33,6 +36,7 @@ export interface INavThreeProp {
   icon?: string | null
   createdAt?: string
   collapsed?: boolean
+  ownVisible?: boolean
   nav: INavFourProp[]
 }
 
@@ -41,6 +45,7 @@ export interface INavTwoProp {
   icon?: string | null
   createdAt?: string
   collapsed?: boolean
+  ownVisible?: boolean
   nav: INavThreeProp[]
 }
 
@@ -49,6 +54,7 @@ export interface INavProps extends Object {
   id?: number
   icon?: string | null
   createdAt?: string
+  ownVisible?: boolean
   nav: INavTwoProp[]
 }
 
@@ -73,10 +79,6 @@ export interface IConfig {
   baiduStatisticsUrl?: string
   cnzzStatisticsUrl?: string
   showGithub: boolean
-
-  lightThemeConfig: {
-    backgroundLinear: string[]
-  },
 
   simThemeConfig: {
     posterImageUrls: string[]

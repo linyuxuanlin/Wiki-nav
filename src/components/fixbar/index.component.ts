@@ -22,6 +22,7 @@ import { setAnnotate } from '../../utils/ripple'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FixbarComponent {
+  @Input() showCollapse: boolean = true
   @Input() collapsed: boolean
   @Input() selector: string
   @Output() onCollapse = new EventEmitter()
@@ -43,6 +44,10 @@ export class FixbarComponent {
     {
       name: '切换到 Side',
       url: '/side'
+    },
+    {
+      name: '切换到 Shortcut',
+      url: '/shortcut'
     },
     {
       name: '切换到 App',
@@ -168,7 +173,7 @@ export class FixbarComponent {
     this.modal.info({
       nzTitle: '同步数据到远端',
       nzOkText: '确定同步',
-      nzContent: '确定将所有数据同步到远端吗？这可能需要消耗一定的时间。',
+      nzContent: '确定将所有数据同步到远端吗？',
       nzOnOk: () => {
         this.syncLoading = true;
 

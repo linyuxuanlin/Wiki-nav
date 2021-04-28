@@ -2,26 +2,32 @@
 // See https://github.com/xjh22222228/nav
 
 import qs from 'qs'
-import config from '../../nav.config'
 import Clipboard from 'clipboard'
-import { INavFourProp, INavProps, ISearchEngineProps } from '../types'
+import {
+  INavFourProp, INavThreeProp, INavProps,
+  ISearchEngineProps
+} from '../types'
 import * as db from '../../data/db.json'
 import * as s from '../../data/search.json'
 import { STORAGE_KEY_MAP } from '../constants'
+import { isLogin } from './user'
+import { SearchType } from '../components/search-engine/index'
 
-export const websiteList = getWebsiteList()
+export const websiteList: INavProps[] = getWebsiteList()
 
 let total = 0
-const { lightThemeConfig } = config
-const { backgroundLinear } = lightThemeConfig
 const searchEngineList: ISearchEngineProps[] = (s as any).default
 
 export function randomInt(max: number) {
   return Math.floor(Math.random() * max)
 }
 
-export function fuzzySearch(navList: INavProps[], keyword: string) {
-  let searchResultList = [{ nav: [] }]
+export function fuzzySearch(navList: INavProps[], keyword: string): INavThreeProp[] {
+  const { type, page, id } = queryString()
+  const sType = Number(type) || SearchType.Title
+  const navData = []
+  const resultList = [{ nav: navData }]
+  const urlRecordMap = {}
 
   function f(arr?: any[]) {
     arr = arr || navList
@@ -32,7 +38,7 @@ export function fuzzySearch(navList: INavProps[], keyword: string) {
         f(item.nav)
       }
 
-      if (searchResultList[0].nav.length > 50) break
+      if (navData.length > 50) break
 
       if (item.name) {
         const name = item.name.toLowerCase()
@@ -41,40 +47,92 @@ export function fuzzySearch(navList: INavProps[], keyword: string) {
         const search = keyword.toLowerCase()
         const urls = Object.values(item.urls || {})
 
-        if (name.includes(search) || desc.includes(search)) {
-          try {
-            let result = Object.assign({}, item)
+        function searchTitle(): boolean {
+          if (name.includes(search)) {
+            let result = { ...item }
             const regex = new RegExp(`(${keyword})`, 'i')
             result.name = result.name.replace(regex, `$1`.bold())
+
+            if (!urlRecordMap[result.url]) {
+              urlRecordMap[result.url] = true
+              navData.push(result)
+              return true
+            }
+          }
+          return false
+        }
+
+        function searchUrl() {
+          if (url?.includes?.(keyword.toLowerCase())) {
+            if (!urlRecordMap[item.url]) {
+              urlRecordMap[item.url] = true
+              navData.push(item)
+              return true
+            }
+          }
+  
+          const find = urls.some((item: string) => item.includes(keyword))
+          if (find) {
+            if (!urlRecordMap[item.url]) {
+              urlRecordMap[item.url] = true
+              navData.push(item)
+              return true
+            }
+          }
+        }
+
+        function searchDesc(): boolean {
+          if (desc.includes(search)) {
+            let result = { ...item }
+            const regex = new RegExp(`(${keyword})`, 'i')
             result.desc = result.desc.replace(regex, `$1`.bold())
 
-            const exists = searchResultList[0].nav.some(item => item.name === result.name)
-            if (!exists) {
-              searchResultList[0].nav.push(result)
+            if (!urlRecordMap[result.url]) {
+              urlRecordMap[result.url] = true
+              navData.push(result)
+              return true
             }
-          } catch (err) {}
-          continue
+          }
+          return false
         }
 
-        if (url?.includes?.(keyword.toLowerCase())) {
-          searchResultList[0].nav.push(item)
-        }
+        try {
+          switch (sType) {
+            case SearchType.Url:
+              searchUrl()
+              break
 
-        const find = urls.some((item: string) => item.includes(keyword))
-        if (find) {
-          searchResultList[0].nav.push(item)
+            case SearchType.Title:
+              searchTitle()
+              break
+
+            case SearchType.Desc:
+              searchDesc()
+              break
+
+            default:
+              searchTitle()
+              searchDesc()
+              searchUrl()
+          }
+        } catch (error) {
+          console.error(error)
         }
       }
     }
   }
 
-  f()
+  if (sType === SearchType.Current) {
+    f(navList[page].nav[id].nav)
+  } else {
+    f()
+  }
 
-  if (searchResultList[0].nav.length <= 0) {
+  if (navData.length <= 0) {
     return []
   }
 
-  return searchResultList
+  return resultList
 }
 
 export function totalWeb(): number {
@@ -86,16 +144,25 @@ export function totalWeb(): number {
     if (!Array.isArray(nav)) return
 
     for (let i = 0; i < nav.length; i++) {
-      if (nav[i].url) {
+      const item = nav[i]
+      if (item.url && (isLogin || !item.ownVisible)) {
         total += 1
       } else {
-        r(nav[i].nav)
+        r(item.nav)
       }
     }
   }
   r(websiteList)
 
   return total
+}
+
+function randomColor(): string {
+  const r = randomInt(255)
+  const g = randomInt(255)
+  const b = randomInt(255)
+  const c = `#${r.toString(16)}${g.toString(16)}${b.toString(16)}000`
+  return c.slice(0, 7)
 }
 
 let randomTimer
@@ -105,13 +172,16 @@ export function randomBgImg() {
   clearInterval(randomTimer)
 
   const el = document.createElement('div')
+  const deg = randomInt(360)
   el.id = 'random-light-bg'
   el.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:-3;transition: 1s linear;'
-  el.style.backgroundImage = backgroundLinear[randomInt(backgroundLinear.length)]
+  el.style.backgroundImage =
+    `linear-gradient(${deg}deg, ${randomColor()} 0%, ${randomColor()} 100%)`
   document.body.appendChild(el)
 
   function setBg() {
-    const randomBg = backgroundLinear[randomInt(backgroundLinear.length)]
+    const randomBg =
+    `linear-gradient(${deg}deg, ${randomColor()} 0%, ${randomColor()} 100%)`
     el.style.opacity = '.3'
     setTimeout(() => {
       el.style.backgroundImage = randomBg
@@ -129,7 +199,7 @@ export function queryString(): {
   [key: string]: any
 } {
   const { href } = window.location
-  const search = href.slice(href.indexOf('?') + 1)
+  const search = href.split('?')[1] || ''
   const parseQs = qs.parse(search)
   let id = parseInt(parseQs.id) || 0
   let page = parseInt(parseQs.page) || 0
@@ -149,10 +219,7 @@ export function queryString(): {
     page = websiteList.length - 1;
     id = 0;
   } else {
-    page = page;
-    if (id <= websiteList[page].nav.length - 1) {
-      id = id;
-    } else {
+    if (!(id <= websiteList[page].nav.length - 1)) {
       id = websiteList[page].nav.length - 1;
     }
   }
@@ -176,12 +243,14 @@ export function adapterWebsiteList(websiteList: any[], parentItem?: any) {
       adapterWebsiteList(item.nav, item)
     }
 
+    // Four
     if (item.url) {
       if (!item.icon && parentItem?.icon) {
         item.icon = parentItem.icon
       }
 
       item.urls ||= {}
+      item.rate ??= 5
       item.top ??= false
     }
   }
@@ -189,7 +258,7 @@ export function adapterWebsiteList(websiteList: any[], parentItem?: any) {
   return websiteList;
 }
 
-export function getWebsiteList() {
+export function getWebsiteList(): INavProps[] {
   let webSiteList = adapterWebsiteList((db as any).default)
   const scriptElAll = document.querySelectorAll('script')
   const scriptUrl = scriptElAll[scriptElAll.length - 1].src
@@ -228,19 +297,19 @@ export function setWebsiteList(v?: INavProps[]) {
 }
 
 export function toggleCollapseAll(wsList?: INavProps[]): boolean {
-  wsList = wsList || websiteList
+  wsList ||= websiteList
 
   const { page, id } = queryString()
-  const collapsed = !websiteList[page].nav[id].collapsed
+  const collapsed = !wsList[page].nav[id].collapsed
 
-  websiteList[page].nav[id].collapsed = collapsed
+  wsList[page].nav[id].collapsed = collapsed
 
-  websiteList[page].nav[id].nav.map(item => {
+  wsList[page].nav[id].nav.map(item => {
     item.collapsed = collapsed
     return item
   })
 
-  setWebsiteList(websiteList)
+  setWebsiteList(wsList)
 
   return collapsed
 }
@@ -248,10 +317,13 @@ export function toggleCollapseAll(wsList?: INavProps[]): boolean {
 export function setLocation() {
   const { page, id } = queryString()
 
-  window.localStorage.setItem(STORAGE_KEY_MAP.location, JSON.stringify({
-    page,
-    id
-  }))
+  window.localStorage.setItem(
+    STORAGE_KEY_MAP.location,
+    JSON.stringify({
+      page,
+      id
+    }
+  ))
 }
 
 export function getDefaultSearchEngine(): ISearchEngineProps {
@@ -266,7 +338,10 @@ export function getDefaultSearchEngine(): ISearchEngineProps {
 }
 
 export function setDefaultSearchEngine(engine: ISearchEngineProps) {
-  window.localStorage.setItem(STORAGE_KEY_MAP.engine, JSON.stringify(engine))
+  window.localStorage.setItem(
+    STORAGE_KEY_MAP.engine,
+    JSON.stringify(engine)
+  )
 }
 
 export function isDark(): boolean {
@@ -319,23 +394,21 @@ export async function getLogoUrl(url: string): Promise<boolean|string> {
   }
 }
 
-export function copyText(el: any, text: string): Promise<boolean> {
-  const target = el.target
-  const ranId = 'copy-' + randomInt(99999999)
+export function copyText(el: Event, text: string): Promise<boolean> {
+  const target = el.target as Element
+  const ranId = `copy-${Date.now()}`
   target.id = ranId
   target.setAttribute('data-clipboard-text', text)
 
   return new Promise(resolve => {
     const clipboard = new Clipboard(`#${ranId}`)
     clipboard.on('success', function() {
-      clipboard?.destroy?.()
-      target.removeAttribute('id')
+      clipboard.destroy()
       resolve(true)
     });
   
     clipboard.on('error', function() {
-      clipboard?.destroy?.()
-      target.removeAttribute('id')
+      clipboard.destroy()
       resolve(false)
     });
   })
@@ -431,4 +504,25 @@ export function getTextContent(value: string): string {
   const div = document.createElement('div')
   div.innerHTML = value
   return div.textContent
+}
+
+export function matchCurrentList(): INavThreeProp[] {
+  const { id, page } = queryString()
+  let data = []
+
+  try {
+    if (
+      websiteList[page] &&
+      websiteList[page]?.nav?.length > 0 &&
+      (isLogin || !websiteList[page].nav[id].ownVisible)
+    ) {
+      data = websiteList[page].nav[id].nav
+    } else {
+      data = []
+    }
+  } catch {
+    data = []
+  }
+
+  return data
 }

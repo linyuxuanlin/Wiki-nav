@@ -10,7 +10,9 @@ import {
   queryString,
   setWebsiteList,
   toggleCollapseAll,
+  matchCurrentList
 } from '../../../utils'
+import { isLogin } from '../../../utils/user'
 import { websiteList } from '../../../store'
 import { LOGO_CDN } from '../../../constants'
 import * as s from '../../../../data/search.json'
@@ -18,11 +20,11 @@ import * as s from '../../../../data/search.json'
 const searchEngineList: ISearchEngineProps[] = (s as any).default
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-side',
   templateUrl: './index.component.html',
   styleUrls: ['./index.component.scss']
 })
-export default class HomeComponent {
+export default class SideComponent {
   LOGO_CDN = LOGO_CDN
   websiteList: INavProps[] = websiteList
   currentList: INavThreeProp[] = []
@@ -32,23 +34,13 @@ export default class HomeComponent {
   openIndex = queryString().page
   contentEl: HTMLElement
   searchEngineList = searchEngineList
-  marginTop: number = 50
+  marginTop: number = searchEngineList.length > 0 ? 157 : 50
+  isFirst = false
+  isLogin = isLogin
 
   constructor (private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
-    const initList = () => {
-      try {
-        if (this.websiteList[this.page] && this.websiteList[this.page]?.nav?.length > 0) {
-          this.currentList = this.websiteList[this.page].nav[this.id].nav
-        } else {
-          this.currentList = []
-        }
-      } catch (error) {
-        this.currentList = []
-      }
-    }
-
     this.activatedRoute.queryParams.subscribe(() => {
       const { id, page, q } = queryString()
       this.page = page
@@ -57,18 +49,25 @@ export default class HomeComponent {
       if (q) {
         this.currentList = fuzzySearch(this.websiteList, q)
       } else {
-        initList()
+        this.currentList = matchCurrentList()
       }
 
       setWebsiteList(this.websiteList)
     })
   }
 
-  ngAfterViewInit() {
+  ngAfterContentInit() {
     window.addEventListener('scroll', this.scroll)
 
-    const headerEl = document.querySelector('.search-header')
-    this.marginTop = headerEl.clientHeight
+    if (!this.isFirst) {
+      setTimeout(() => {
+        const headerEl = document.querySelector('.search-header')
+        if (headerEl) {
+          this.isFirst = true
+          this.marginTop = headerEl.clientHeight + 25
+        }
+      }, 26)
+    }
   }
 
   ngOnDestroy() {
@@ -104,7 +103,8 @@ export default class HomeComponent {
     setWebsiteList(this.websiteList)
   }
 
-  onCollapseAll = () => {
+  onCollapseAll = (e: Event) => {
+    e?.stopPropagation()
     toggleCollapseAll(this.websiteList)
   }
 
