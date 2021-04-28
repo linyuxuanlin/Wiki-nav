@@ -39,7 +39,30 @@
   <ng-template #avatarTemplate>
     <app-logo [src]="dataSource.icon" [name]="dataSource.name"></app-logo>
   </ng-template>
-  
+  <ng-template #actionSetting>
+    <div nz-tooltip [nzTooltipTitle]="copyUrlDone ? '复制成功' : '复制链接'">
+      <i
+        nz-icon
+        [nzType]="copyUrlDone ? 'check' : 'copy'"
+        nzTheme="outline"
+        (click)="copyUrl($event, 2)"
+        (mouseout)="copyMouseout()"
+      >
+      </i>
+    </div>
+  </ng-template>
+  <ng-template #actionEdit>
+    <div nz-tooltip [nzTooltipTitle]="copyPathDone ? '复制成功' : '分享网站'">
+      <i
+        nz-icon
+        [nzType]="copyPathDone ? 'check' : 'share-alt'"
+        nzTheme="outline"
+        (click)="copyUrl($event, 1)"
+        (mouseout)="copyMouseout()"
+      >
+      </i>
+    </div>
+  </ng-template>
   <ng-template #actionEllipsis>
     <i nz-icon nzType="ellipsis" nz-dropdown [nzDropdownMenu]="menu" *ngIf="isLogin"></i>
 
