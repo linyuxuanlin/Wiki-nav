@@ -26,7 +26,7 @@ const c: IConfig = {
   keywords: '导航,前端资源,社区站点,设计师,实用工具,学习资源,运营,网络安全,node.js',
 
   // 默认主题: Light | Sim | Side | App | Shortcut
-  theme: 'Light',
+  theme: 'Side',
 
   // 网站底部内容, 版权信息、备案号, 可以是 HTML
   footerContent: `
