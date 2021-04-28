@@ -17,7 +17,7 @@ const c: IConfig = {
   homeUrl: 'https://nav.wiki-power.cn',
 
   // 网站标题
-  title: 'Power\'s Nav',
+  title: 'Power-Nav',
 
   // 网站描述
   description: '个人导航站',
