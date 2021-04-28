@@ -3,13 +3,13 @@
   "version": "5.3.2",
   "author": "xiejiahe",
   "bugs": {
-    "url": "https://github.com/xjh22222228/nav/issues"
+    "url": "https://github.com/linyuxuanlin/Wiki-nav/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xjh22222228/nav.git"
+    "url": "git+https://github.com/linyuxuanlin/Wiki-nav.git"
   },
-  "homepage": "https://github.com/xjh22222228/nav",
+  "homepage": "https://github.com/linyuxuanlin/Wiki-nav",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port=7000",

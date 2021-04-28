@@ -1,5 +1,5 @@
 // Copyright @ 2018-2021 xiejiahe. All rights reserved. MIT license.
-// See https://github.com/xjh22222228/nav
+// See https://github.com/linyuxuanlin/Wiki-nav
 
 import hotkeys from 'hotkeys-js'
 import config from '../../../nav.config'
@@ -103,7 +103,7 @@ export class FixbarComponent {
         <p>部署分支: ${config.branch}</p>
         <p>上次构建时间: ${date || '未知'}</p>
         <p>当前版本: <img src="https://img.shields.io/badge/release-v${VERSION}-red.svg?longCache=true&style=flat-square"></p>
-        <p>最新版本: <img src="https://img.shields.io/github/v/release/xjh22222228/nav" /></p>
+        <p>最新版本: <img src="https://img.shields.io/github/v/release/linyuxuanlin/Wiki-nav" /></p>
       `,
     });
   }
