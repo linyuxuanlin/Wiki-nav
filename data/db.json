@@ -19,14 +19,10 @@
                 "urls": { "Github": "https://github.com/cli/cli" }
               },
               {
-                "name": "Github-CLI",
-                "createdAt": "2021-02-18T13:06:06.671Z",
-                
+                "name": "Githubtest",
                 "desc": "GitHub的官方命令行工具",
-                "top": false,
                 "icon": "https://github.githubassets.com/favicons/favicon.svg",
-                "url": "https://cli.github.com/",
-                "urls": { "Github": "https://github.com/cli/cli" }
+                "url": "https://cli.github.com/"
               }
             ],
             "collapsed": false,
