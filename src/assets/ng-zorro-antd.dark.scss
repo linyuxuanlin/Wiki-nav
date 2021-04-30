@@ -4308,71 +4308,10 @@
   .ant-card-cover img {
     border-radius: 2px 2px 0 0;
   }
-  .ant-card-actions {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    background: #d11f1f;
-    border-top: 1px solid #303030;
-  }
-  .ant-card-actions::before {
-    display: table;
-    content: '';
-  }
-  .ant-card-actions::after {
-    display: table;
-    clear: both;
-    content: '';
-  }
-  .ant-card-actions::before {
-    display: table;
-    content: '';
-  }
-  .ant-card-actions::after {
-    display: table;
-    clear: both;
-    content: '';
-  }
-  .ant-card-actions > li {
-    float: left;
-    margin: 12px 0;
-    color: rgba(255, 255, 255, 0.45);
-    text-align: center;
-  }
-  .ant-card-rtl .ant-card-actions > li {
-    float: right;
-  }
-  .ant-card-actions > li > span {
-    position: relative;
-    display: block;
-    min-width: 32px;
-    font-size: 14px;
-    line-height: 1.5715;
-    cursor: pointer;
-  }
-  .ant-card-actions > li > span:hover {
-    color: #177ddc;
-    transition: color 0.3s;
-  }
-  .ant-card-actions > li > span a:not(.ant-btn),
-  .ant-card-actions > li > span > .anticon {
-    display: inline-block;
-    width: 100%;
-    color: rgba(255, 255, 255, 0.45);
-    line-height: 22px;
-    transition: color 0.3s;
-  }
-  .ant-card-actions > li > span a:not(.ant-btn):hover,
-  .ant-card-actions > li > span > .anticon:hover {
-    color: #177ddc;
-  }
-  .ant-card-actions > li > span > .anticon {
-    font-size: 16px;
-    line-height: 22px;
-  }
-  .ant-card-actions > li:not(:last-child) {
-    border-right: 1px solid #303030;
-  }
+
+
+
+
   .ant-card-type-inner .ant-card-head {
     padding: 0 24px;
     background: rgba(255, 255, 255, 0.04);
